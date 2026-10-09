@@ -79,6 +79,9 @@ export default async function OrderDetailPage({ params }: PageProps<"/orders/[id
     .map((l) => ({ item_id: l.item_id, qty: Math.max(l.qty - l.qty_delivered, 0) }))
     .filter((l) => l.qty > 0);
   const needs = orderMaterialNeeds(remainingLines, boms, stocks);
+  const fgCovered =
+    remainingLines.length > 0 &&
+    productLinesCovered(remainingLines, (itemId) => stockById.get(itemId)?.on_hand ?? 0);
 
   // qty yang sudah direncanakan di WO per produk (non-batal)
   const plannedByItem = new Map<string, number>();
@@ -207,6 +210,13 @@ export default async function OrderDetailPage({ params }: PageProps<"/orders/[id
           actions={<LinkButton href="/mrp" size="sm">Lihat MRP lengkap →</LinkButton>}
           bodyClassName="p-0"
         >
+          {fgCovered && active && (
+            <div className="p-3">
+              <Alert tone="green">
+                Stok barang jadi saat ini sudah cukup untuk sisa order ini — bisa langsung dikirim tanpa produksi.
+              </Alert>
+            </div>
+          )}
           {needs.missingBom.length > 0 && (
             <div className="p-3">
               <Alert tone="amber">
@@ -396,4 +406,10 @@ export default async function OrderDetailPage({ params }: PageProps<"/orders/[id
       </div>
     </>
   );
+}
+
+function productLinesCovered(lines: { item_id: string; qty: number }[], onHand: (itemId: string) => number) {
+  const need = new Map<string, number>();
+  for (const l of lines) need.set(l.item_id, (need.get(l.item_id) ?? 0) + l.qty);
+  return [...need].every(([itemId, qty]) => onHand(itemId) >= qty);
 }

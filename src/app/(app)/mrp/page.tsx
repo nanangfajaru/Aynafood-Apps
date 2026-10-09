@@ -105,7 +105,7 @@ export default async function MrpPage({ searchParams }: PageProps<"/mrp">) {
                       <input type="checkbox" name="sel" value={p.item.id} defaultChecked aria-label={`Pilih ${p.item.sku}`} />
                     )}
                   </Td>
-                  <Td>
+                  <Td className="min-w-64">
                     <div className="font-medium text-slate-800">
                       {p.item.sku} · {p.item.name}
                     </div>
@@ -148,7 +148,7 @@ export default async function MrpPage({ searchParams }: PageProps<"/mrp">) {
                         step="any"
                         min={0}
                         defaultValue={p.netToProduce}
-                        className="text-right"
+                        className="min-w-28 text-right"
                       />
                     )}
                   </Td>
@@ -202,14 +202,14 @@ export default async function MrpPage({ searchParams }: PageProps<"/mrp">) {
                       <input type="checkbox" name="sel" value={m.item.id} defaultChecked aria-label={`Pilih ${m.item.sku}`} />
                     )}
                   </Td>
-                  <Td>
+                  <Td className="min-w-56">
                     <div className="font-medium text-slate-800">
                       {m.item.sku} · {m.item.name}
                     </div>
-                    <div className="mt-0.5 flex flex-wrap gap-1">
+                    <div className="mt-0.5 flex flex-wrap items-center gap-1.5 text-xs text-slate-500">
                       <Badge tone={ITEM_TYPES[m.item.item_type].tone}>{ITEM_TYPES[m.item.item_type].label}</Badge>
-                      {m.item.moq > 0 && <Badge>MOQ {formatQty(m.item.moq)}</Badge>}
-                      {m.item.order_multiple > 0 && <Badge>Kelipatan {formatQty(m.item.order_multiple)}</Badge>}
+                      {m.item.moq > 0 && <span>MOQ {formatQty(m.item.moq)}</span>}
+                      {m.item.order_multiple > 0 && <span>· kelipatan {formatQty(m.item.order_multiple)}</span>}
                     </div>
                     {m.sources.length > 0 && (
                       <details className="mt-1 text-xs">
@@ -257,13 +257,17 @@ export default async function MrpPage({ searchParams }: PageProps<"/mrp">) {
                         step="any"
                         min={0}
                         defaultValue={m.suggestedQty}
-                        className="text-right"
+                        className="min-w-28 text-right"
                       />
                     )}
                   </Td>
                   <Td>
                     {m.suggestedQty > 0 && (
-                      <Select name={`sup_${m.item.id}`} defaultValue={m.item.default_supplier_id ?? ""}>
+                      <Select
+                        name={`sup_${m.item.id}`}
+                        defaultValue={m.item.default_supplier_id ?? ""}
+                        className="min-w-40"
+                      >
                         <option value="">— Pilih —</option>
                         {suppliers.map((s) => (
                           <option key={s.id} value={s.id}>
@@ -273,7 +277,7 @@ export default async function MrpPage({ searchParams }: PageProps<"/mrp">) {
                       </Select>
                     )}
                   </Td>
-                  <Td>
+                  <Td className="whitespace-nowrap">
                     {m.suggestedQty > 0 ? (
                       <div>
                         <div className={m.isLate ? "font-semibold text-red-600" : ""}>{formatDate(m.orderByDate)}</div>

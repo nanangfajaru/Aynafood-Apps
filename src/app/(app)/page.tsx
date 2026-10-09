@@ -90,7 +90,7 @@ export default async function DashboardPage() {
                     </Link>
                   </Td>
                   <Td>{o.customer_name}</Td>
-                  <Td className={o.due_date && o.due_date < today ? "font-semibold text-red-600" : ""}>
+                  <Td className={`whitespace-nowrap ${o.due_date && o.due_date < today ? "font-semibold text-red-600" : ""}`}>
                     {formatDate(o.due_date)}
                   </Td>
                   <Td>
@@ -154,7 +154,7 @@ export default async function DashboardPage() {
                     {formatQty(m.shortage)} {m.item.unit}
                   </Td>
                   <Td className="num">{formatQty(m.suggestedQty)}</Td>
-                  <Td>
+                  <Td className="whitespace-nowrap">
                     {formatDate(m.orderByDate)} {m.isLate && <Badge tone="red">Telat</Badge>}
                   </Td>
                 </tr>
